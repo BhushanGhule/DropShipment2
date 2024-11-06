@@ -1,0 +1,9 @@
+<mvc:View controllerName="shipment.controller.App"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    height="100%" 
+    xmlns="sap.f">
+<FlexibleColumnLayout id="shipment" stateChange="onStateChanged"	layout="{ComponentModel>/layout}" backgroundDesign="Translucent"/>
+</mvc:View>
+
+
