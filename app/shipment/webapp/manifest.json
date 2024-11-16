@@ -17,11 +17,11 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/odata/v4/CatalogService/",
+        "uri": "/odata/v2/CatalogService/",
         "type": "OData",
         "settings": {
           "annotations": [],
-          "odataVersion": "4.0"
+          "odataVersion": "2.0"
         }
       }
     },
@@ -90,6 +90,14 @@
         {
           "uri": "css/style.css"
         }
+      ],
+      "js": [
+        {
+          "uri": "model/jszip.js"
+        },
+        {
+          "uri": "model/xlsx.js"
+        }
       ]
     },
     "routing": {
@@ -117,6 +125,14 @@
             "master",
             "detail"
           ]
+        },
+        {
+          "pattern": "updatetables/{layout}",
+          "name": "updatetables",
+          "target": [
+            "master",
+            "updatetables"
+          ]
         }
       ],
       "targets": {
@@ -126,6 +142,10 @@
         },
         "detail": {
           "viewName": "Detail",
+          "controlAggregation": "midColumnPages"
+        },
+        "updatetables": {
+          "viewName": "UpdateTables",
           "controlAggregation": "midColumnPages"
         }
       }

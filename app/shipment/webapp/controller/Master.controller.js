@@ -7,6 +7,11 @@ function (Controller) {
     return Controller.extend("shipment.controller.Master", {
         onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
-        }
+        },
+        onUpdateTables: function (oEvent) {
+			this.oRouter.navTo("updatetables", {
+				layout: "MidColumnFullScreen"
+			});
+		}
     });
 });

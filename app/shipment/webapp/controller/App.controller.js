@@ -40,7 +40,6 @@ sap.ui.define(
         }
         // Update the layout of the FlexibleColumnLayout
         if (sLayout) {
-          sLayout = "TwoColumnsMidExpanded";
           oModel.setProperty("/layout", sLayout);
         }
         this._updateUIElements();
