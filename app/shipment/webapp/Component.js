@@ -3,13 +3,14 @@
  */
 
 sap.ui.define([
-    "sap/ui/core/UIComponent",
-    "sap/ui/Device",
-    "shipment/model/models",
-    "sap/ui/model/json/JSONModel",
-    "sap/f/FlexibleColumnLayoutSemanticHelper"
+	"sap/ui/core/UIComponent",
+	"sap/ui/Device",
+	"shipment/model/models",
+	"sap/f/FlexibleColumnLayoutSemanticHelper",
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/core/BusyIndicator"
 ],
-    function (UIComponent, Device, models, JSONModel, FlexibleColumnLayoutSemanticHelper) {
+    function (UIComponent, Device, models, FlexibleColumnLayoutSemanticHelper, JSONModel, Busy) {
         "use strict";
 
         return UIComponent.extend("shipment.Component", {
@@ -29,6 +30,9 @@ sap.ui.define([
                 // Setting Component Model - for setting UI States
                 var oModel = new JSONModel();
                 this.setModel(oModel, "ComponentModel");
+
+                // Setting Global Model - for setting View properties
+                this.setModel(models.createGlobalModel(), "GlobalModel");
 
                 // enable routing
                 this.getRouter().initialize();

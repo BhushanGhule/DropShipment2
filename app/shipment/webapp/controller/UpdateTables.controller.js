@@ -80,20 +80,96 @@ sap.ui.define([
                 }
             },
 
+            // _handleBatchProcess: function (that, oRowData) {
+            //     Busy.show();
+            //     var url = "/odata/v2/CatalogService/";
+            //     var oModel = new sap.ui.model.odata.v2.ODataModel(url, {
+            //         useBatch: true,
+            //         defaultBindingMode: "TwoWay",
+            //         defaultGroupId: "$auto", // Default group for automatic processing
+            //         deferredGroups: ["batchGroup1"] // Define the custom deferred group
+
+            //     });
+
+            //     var batchGroupId = "batchGroup1";
+            //     var changeSetId = "changeSet1";
+
+            //     // Determine the entity set based on the selected radio button
+            //     var entitySet = "";
+            //     if (that.getView().byId("RB1-1").getSelected()) {
+            //         entitySet = "/ShippingSet";
+            //     } else if (that.getView().byId("RB1-2").getSelected()) {
+            //         entitySet = "/CarrierSet";
+            //     } else if (that.getView().byId("RB1-3").getSelected()) {
+            //         entitySet = "/DestinationSet";
+            //     }
+
+            //     // Iterate over the row data to create each entry in the batch
+            //     oRowData.forEach(function (item) {
+            //         var data = {};
+
+            //         if (entitySet === "/ShippingSet") {
+            //             data = {
+            //                 TITLE: item.Title,
+            //                 SHIP_TO_ADDRESS: item.Ship_to_address,
+            //                 SOLD_TO_ADDRESS: item.Sold_to_address,
+            //                 SHIP_TO_COUNTRY: item.Ship_To_Country,
+            //                 SHIP_TO_POSTAL_CODE: item.Ship_To_Postal_Code,
+            //                 INVOICE_TO_COUNTRY: item.Invoice_To_Country,
+            //                 INVOICE_TO_POSTAL_CODE: item.Invoice_To_Postal_Code,
+            //                 INCOTERM_VALUE: item.Incoterm_Value
+            //             };
+            //         } else if (entitySet === "/CarrierSet") {
+            //             data = {
+            //                 TITLE: item.Title,
+            //                 INCOTERM: item.Incoterm,
+            //                 PAID_BY: item.Paid_By,
+            //                 CARRIER: item.Carrier,
+            //                 SHIPTOCODE: item.Ship_To_Code,
+            //                 SITE: item.SITE
+            //             };
+            //         } else if (entitySet === "/DestinationSet") {
+            //             data = {
+            //                 TITLE: item.Title
+            //             };
+            //         }
+
+            //         // Add each item to the batch
+            //         oModel.create(entitySet, data, {
+            //             batchGroupId: batchGroupId,
+            //             changeSetId: changeSetId
+            //         });
+            //     });
+
+            //     // Submit the batch group
+            //     oModel.submitChanges({
+            //         batchGroupId: batchGroupId,
+            //         success: function (oData) {
+            //             Busy.hide();
+            //             sap.m.MessageToast.show("Batch request successful.");
+            //         },
+            //         error: function (error) {
+            //             Busy.hide();
+            //             console.error("Batch request failed:", error);
+            //         }
+            //     });
+            // },
+
             _handleBatchProcess: function (that, oRowData) {
                 Busy.show();
                 var url = "/odata/v2/CatalogService/";
+                
+                // Create ODataModel with batch enabled
                 var oModel = new sap.ui.model.odata.v2.ODataModel(url, {
                     useBatch: true,
                     defaultBindingMode: "TwoWay",
                     defaultGroupId: "$auto", // Default group for automatic processing
                     deferredGroups: ["batchGroup1"] // Define the custom deferred group
-
                 });
-
+            
                 var batchGroupId = "batchGroup1";
-                var changeSetId = "changeSet1";
-
+                var changeSetId = "changeSet1"; // Use the same change set for all requests in the batch
+            
                 // Determine the entity set based on the selected radio button
                 var entitySet = "";
                 if (that.getView().byId("RB1-1").getSelected()) {
@@ -103,15 +179,16 @@ sap.ui.define([
                 } else if (that.getView().byId("RB1-3").getSelected()) {
                     entitySet = "/DestinationSet";
                 }
-
-                // Iterate over the row data to create each entry in the batch
+            
+                // Grouping data based on the entity set
+                var groupedData = [];
                 oRowData.forEach(function (item) {
                     var data = {};
-
+            
                     if (entitySet === "/ShippingSet") {
                         data = {
                             TITLE: item.Title,
-                            SHIP_TO_ADDRESS: item.Ship_to_address,                         
+                            SHIP_TO_ADDRESS: item.Ship_to_address,
                             SOLD_TO_ADDRESS: item.Sold_to_address,
                             SHIP_TO_COUNTRY: item.Ship_To_Country,
                             SHIP_TO_POSTAL_CODE: item.Ship_To_Postal_Code,
@@ -126,22 +203,22 @@ sap.ui.define([
                             PAID_BY: item.Paid_By,
                             CARRIER: item.Carrier,
                             SHIPTOCODE: item.Ship_To_Code,
-                            SITE: item.Site
+                            SITE: item.SITE
                         };
                     } else if (entitySet === "/DestinationSet") {
                         data = {
                             TITLE: item.Title
                         };
                     }
-
-                    // Add each item to the batch
+            
+                    // Add each item to the batch with the same changeSetId
                     oModel.create(entitySet, data, {
                         batchGroupId: batchGroupId,
                         changeSetId: changeSetId
                     });
                 });
-
-                // Submit the batch group
+            
+                // Submit the batch request
                 oModel.submitChanges({
                     batchGroupId: batchGroupId,
                     success: function (oData) {
@@ -154,31 +231,8 @@ sap.ui.define([
                     }
                 });
             },
+            
 
-
-            onDownload: function () {
-                Busy.show();
-                var Entity = "";
-                if (this.getView().byId("RB1-1").getSelected() === true) {
-                    Entity = "/ZPU_DS_IMACIPO_SHIP_F4";
-                } else if (this.getView().byId("RB1-2").getSelected() === true) {
-                    Entity = "/ZPU_DS_IMACIPO_CARR_F4";
-                } else if (this.getView().byId("RB1-3").getSelected() === true) {
-                    Entity = "/DestinationSet";
-                }
-                var url = "/odata/v2/CatalogService/";
-                var oModel = new sap.ui.model.odata.ODataModel(url, true);
-                oModel.read(Entity, {
-                    success: function (oData) {
-                        this.onDownloadExcel(oData);
-                        Busy.hide();
-                    }.bind(this),
-                    error: function (oError) {
-                        Busy.hide();
-                    }
-                });
-
-            },
             onDownloadExcel: function (oData) {
                 var aCols, aData, oSettings, oSheet, fileName, sheetName;
                 aData = [];
@@ -189,14 +243,14 @@ sap.ui.define([
                     sheetName = this.i18n.getText("ShipToCode");
                     oData.results.forEach(function (Item) {
                         aData.push({
-                            Title: Item.Title,
-                            ShipToAddress: Item.ShipToAddress,
-                            SoldToAddress: Item.SoldToAddress,
-                            ShipToCountry: Item.ShipToCountry,
-                            ShipToPostalCode: Item.ShipToPostalCode,
-                            InvoiceToCountry: Item.InvoiceToCountry,
-                            InvoiceToPostalCode: Item.InvoiceToPostalCode,
-                            IncotermValue: Item.IncotermValue
+                            Title: Item.TITLE,
+                            ShipToAddress: Item.SHIP_TO_ADDRESS,
+                            SoldToAddress: Item.SOLD_TO_ADDRESS,
+                            ShipToCountry: Item.SHIP_TO_COUNTRY,
+                            ShipToPostalCode: Item.SHIP_TO_POSTAL_CODE,
+                            InvoiceToCountry: Item.INVOICE_TO_COUNTRY,
+                            InvoiceToPostalCode: Item.INVOICE_TO_POSTAL_CODE,
+                            IncotermValue: Item.INCOTERM_VALUE
                         });
                     });
                 } else if (this.getView().byId("RB1-2").getSelected() === true) {
@@ -205,12 +259,12 @@ sap.ui.define([
                     sheetName = this.i18n.getText("CarrierAccount2");
                     oData.results.forEach(function (Item) {
                         aData.push({
-                            Title: Item.Title,
-                            Incoterm: Item.Incoterm,
-                            Carrier: Item.Carrier,
-                            PaidBy: Item.PaidBy,
-                            ShipToCode: Item.ShipToCode,
-                            Site: Item.Site
+                            Title: Item.TITLE,
+                            Incoterm: Item.INCOTERM,
+                            Carrier: Item.CARRIER,
+                            PaidBy: Item.PAID_BY,
+                            ShipToCode: Item.SHIPTOCODE,
+                            Site: Item.SITE
                         });
                     });
                 } else if (this.getView().byId("RB1-3").getSelected() === true) {
@@ -219,7 +273,7 @@ sap.ui.define([
                     sheetName = this.i18n.getText("OriginDestinationPoint2");
                     oData.results.forEach(function (Item) {
                         aData.push({
-                            Title: Item.Title
+                            Title: Item.TITLE
                         });
                     });
                 }

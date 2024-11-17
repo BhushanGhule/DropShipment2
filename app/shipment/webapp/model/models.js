@@ -1,19 +1,39 @@
 sap.ui.define([
-    "sap/ui/model/json/JSONModel",
-    "sap/ui/Device"
-], 
-function (JSONModel, Device) {
-    "use strict";
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/Device"
+], function (JSONModel, Device) {
+	"use strict";
 
-    return {
-        /**
-         * Provides runtime info for the device the UI5 app is running on as JSONModel
-         */
-        createDeviceModel: function () {
-            var oModel = new JSONModel(Device);
-            oModel.setDefaultBindingMode("OneWay");
-            return oModel;
-        }
-    };
+	return {
 
+		createDeviceModel: function () {
+			var oModel = new JSONModel(Device);
+			oModel.setDefaultBindingMode("OneWay");
+			return oModel;
+		},
+
+		createGlobalModel: function () {
+			var sUserId = "bhushan.ghule@gmail.com";
+			var sUserFName = "Bhushan",  // DEFAULT
+				sUserLName = "Ghule"; // USER
+			var oModel = new JSONModel({
+				"Refresh": false,
+				"Load": true,
+				"UserId": sUserId,
+				"UserName": sUserFName + " " + sUserLName,
+				"MyInbox": true,
+				"MessageFilters": {
+					items: [{
+						"Key": "S",
+						"Text": "Success"
+					}, {
+						"Key": "E",
+						"Text": "Error"
+					}]
+				}
+			});
+			return oModel;
+		},
+
+	};
 });

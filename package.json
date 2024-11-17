@@ -17,7 +17,7 @@
   "devDependencies": {
     "@cap-js/cds-types": "^0.6",
     "@cap-js/sqlite": "^1",
-    "@sap/ux-specification": "UI5-1.130"
+    "@sap/ux-specification": "^1.124.5"
   },
   "scripts": {
     "start": "cds-serve",
@@ -28,6 +28,10 @@
   "cds": {
     "sql": {
       "native_hana_associations": false
+    },
+    "odata": {
+      "version": "v2",
+      "batch": true
     }
   }
 }
