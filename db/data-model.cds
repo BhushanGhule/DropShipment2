@@ -23,8 +23,8 @@ context master {
             INCOTERM_VALUE         : String(40)  @title: '{i18n>INCOTERM_VAL}';
     }
 
-    entity Carrier {
-        key TITLE      : String(8)  @title: '{i18n>TITLE}';
+    entity Carrier : cuid {
+            TITLE      : String(8)  @title: '{i18n>TITLE}';
             INCOTERM   : String(42) @title: '{i18n>INCOTERM}';
             PAID_BY    : String(40) @title: '{i18n>PAID_BY}';
             CARRIER    : String(45) @title: '{i18n>CARRIER}';

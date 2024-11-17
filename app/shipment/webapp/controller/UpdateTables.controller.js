@@ -80,128 +80,67 @@ sap.ui.define([
                 }
             },
 
-            // Update Tables
-            // _handleBatchProcess: function (that, oRowData, tableName) {
-            //     Busy.show();
-            //     var batchUrls = [];
-            //     var url = "/odata/v2/CatalogService/";
-            //     var oModel = new sap.ui.model.odata.ODataModel(url, true);
-            //     var header = {};
-
-            //     header.Action = tableName;
-            //     header.CreatedOn = new Date();
-            //     header.LastChangedOn = new Date();
-            //     header.DateShipped = new Date();
-            //     // batchUrls.push(oModel.createBatchOperation("/HeaderSet", "POST", header));
-            //     oRowData.forEach(function (Item) {
-
-            //         if (that.getView().byId("RB1-1").getSelected() === true) {
-            //             var Shiping = {};
-            //             Shiping.Title = Item.Title;
-            //             Shiping.ShipToAddress = Item.Ship_To_Address;
-            //             Shiping.SoldToAddress = Item.Sold_To_Address;
-            //             Shiping.ShipToCountry = Item.Ship_To_Country;
-            //             Shiping.ShipToPostalCode = Item.Ship_To_Postal_Code;
-            //             Shiping.InvoiceToCountry = Item.Invoice_To_Country;
-            //             Shiping.InvoiceToPostalCode = Item.Invoice_To_Postal_Code;
-            //             Shiping.IncotermValue = Item.Incoterm_Value;
-            //             batchUrls.push(oModel.createBatchOperation("/ShipingSet", "POST", Shiping));
-            //         } else if (that.getView().byId("RB1-2").getSelected() === true) {
-            //             var carrier = {};
-            //             carrier.Title = Item.Title;
-            //             carrier.Incoterm = Item.Incoterm;
-            //             carrier.PaidBy = Item.Paid_By;
-            //             carrier.Carrier_ = Item.Carrier;
-            //             carrier.ShipToCode = Item.Ship_To_Code;
-            //             carrier.Site = Item.Site;
-            //             batchUrls.push(oModel.createBatchOperation("/CarrierSet", "POST", carrier));
-            //         } else if (that.getView().byId("RB1-3").getSelected() === true) {
-            //             var Destination = {};
-            //             Destination.TITLE = Item.Title;
-            //             batchUrls.push(oModel.createBatchOperation("/DestinationSet", "POST", Destination));
-            //         }
-            //     });
-            //     oModel.addBatchChangeOperations(batchUrls);
-            //     oModel.setUseBatch(true);
-            //     oModel.submitBatch(function (oData, oResponse) {
-            //         if (oData.__batchResponses[0].__changeResponses[0].response) {
-            //             MessageToast.show(JSON.parse(oData.__batchResponses[0].__changeResponses[0].response.body).error.message.value);
-            //             Busy.hide();
-            //         } else {
-            //             var changeResponse = oData.__batchResponses[0].__changeResponses;
-            //             changeResponse.forEach(function (Response) {
-            //                 if (Response.data.__metadata.type === "ZOD_PU_IMACIPO_DS_SRV.Header") {
-            //                     var message = "Table " + Response.data.Action + " has been updated successfully";
-            //                     sap.m.MessageToast.show(message);
-            //                 }
-            //             });
-            //         }
-            //         Busy.hide();
-            //     }, function (error) {
-            //         Busy.hide();
-            //     });
-
-            // },
-
-
             _handleBatchProcess: function (that, oRowData) {
                 Busy.show();
                 var url = "/odata/v2/CatalogService/";
                 var oModel = new sap.ui.model.odata.v2.ODataModel(url, {
                     useBatch: true,
-                    defaultBindingMode: "TwoWay"
+                    defaultBindingMode: "TwoWay",
+                    defaultGroupId: "$auto", // Default group for automatic processing
+                    deferredGroups: ["batchGroup1"] // Define the custom deferred group
+
                 });
-            
+
                 var batchGroupId = "batchGroup1";
                 var changeSetId = "changeSet1";
-            
+
                 // Determine the entity set based on the selected radio button
                 var entitySet = "";
                 if (that.getView().byId("RB1-1").getSelected()) {
-                    entitySet = "/ShipingSet";
+                    entitySet = "/ShippingSet";
                 } else if (that.getView().byId("RB1-2").getSelected()) {
                     entitySet = "/CarrierSet";
                 } else if (that.getView().byId("RB1-3").getSelected()) {
                     entitySet = "/DestinationSet";
                 }
-            
+
                 // Iterate over the row data to create each entry in the batch
                 oRowData.forEach(function (item) {
                     var data = {};
-            
-                    if (entitySet === "/ShipingSet") {
+
+                    if (entitySet === "/ShippingSet") {
                         data = {
-                            Title: item.Title,
-                            ShipToAddress: item.Ship_To_Address,
-                            SoldToAddress: item.Sold_To_Address,
-                            ShipToCountry: item.Ship_To_Country,
-                            ShipToPostalCode: item.Ship_To_Postal_Code,
-                            InvoiceToCountry: item.Invoice_To_Country,
-                            InvoiceToPostalCode: item.Invoice_To_Postal_Code,
-                            IncotermValue: item.Incoterm_Value
+                            TITLE: item.Title,
+                            SHIP_TO_ADDRESS: item.Ship_to_address,                         
+                            SOLD_TO_ADDRESS: item.Sold_to_address,
+                            SHIP_TO_COUNTRY: item.Ship_To_Country,
+                            SHIP_TO_POSTAL_CODE: item.Ship_To_Postal_Code,
+                            INVOICE_TO_COUNTRY: item.Invoice_To_Country,
+                            INVOICE_TO_POSTAL_CODE: item.Invoice_To_Postal_Code,
+                            INCOTERM_VALUE: item.Incoterm_Value
                         };
                     } else if (entitySet === "/CarrierSet") {
                         data = {
-                            Title: item.Title,
-                            Incoterm: item.Incoterm,
-                            PaidBy: item.Paid_By,
-                            Carrier_: item.Carrier,
-                            ShipToCode: item.Ship_To_Code,
-                            Site: item.Site
+                            TITLE: item.Title,
+                            INCOTERM: item.Incoterm,
+                            PAID_BY: item.Paid_By,
+                            CARRIER: item.Carrier,
+                            SHIPTOCODE: item.Ship_To_Code,
+                            SITE: item.Site
                         };
                     } else if (entitySet === "/DestinationSet") {
                         data = {
                             TITLE: item.Title
                         };
                     }
-            
+
                     // Add each item to the batch
                     oModel.create(entitySet, data, {
                         batchGroupId: batchGroupId,
                         changeSetId: changeSetId
                     });
                 });
-            
+
                 // Submit the batch group
                 oModel.submitChanges({
                     batchGroupId: batchGroupId,
@@ -215,7 +154,7 @@ sap.ui.define([
                     }
                 });
             },
-             
+
 
             onDownload: function () {
                 Busy.show();
