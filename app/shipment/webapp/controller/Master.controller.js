@@ -1,32 +1,3 @@
-// sap.ui.define([
-//     "sap/ui/core/mvc/Controller",
-//     "sap/ui/core/Fragment"
-// ],
-//     function (Controller, Fragment) {
-//         "use strict";
-
-//         return Controller.extend("shipment.controller.Master", {
-//             onInit: function () {
-//                 this.oRouter = this.getOwnerComponent().getRouter();
-//             },
-//             onUpdateTables: function (oEvent) {
-//                 this.oRouter.navTo("updatetables", {
-//                     layout: "MidColumnFullScreen"
-//                 });
-//             },
-//             onRequestCreate: function (oEvent) {
-//                 var oGlobalModel = this.getOwnerComponent().getModel("GlobalModel");
-//                 oGlobalModel.setProperty("/Refresh", false);
-//                 oGlobalModel.setProperty("/Load", true);
-//                 this.oRouter.navTo("detail", {
-//                     layout: "MidColumnFullScreen"
-//                 });
-//             }
-
-
-//         });
-//     });
-
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/core/format/DateFormat",

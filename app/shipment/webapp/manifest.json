@@ -23,6 +23,10 @@
           "annotations": [],
           "odataVersion": "2.0"
         }
+      },
+      "defaultValueDataSource": {
+        "uri": "model/defaultValueJSON.json",
+        "type": "JSON"
       }
     },
     "crossNavigation": {
@@ -83,6 +87,11 @@
           "autoExpandSelect": true,
           "earlyRequests": true
         }
+      },
+      "defaultValueModel": {
+        "type": "sap.ui.model.json.JSONModel",
+        "dataSource": "defaultValueDataSource",
+        "preload": true
       }
     },
     "resources": {

@@ -3,12 +3,12 @@
  */
 
 sap.ui.define([
-	"sap/ui/core/UIComponent",
-	"sap/ui/Device",
-	"shipment/model/models",
-	"sap/f/FlexibleColumnLayoutSemanticHelper",
-	"sap/ui/model/json/JSONModel",
-	"sap/ui/core/BusyIndicator"
+    "sap/ui/core/UIComponent",
+    "sap/ui/Device",
+    "shipment/model/models",
+    "sap/f/FlexibleColumnLayoutSemanticHelper",
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/core/BusyIndicator"
 ],
     function (UIComponent, Device, models, FlexibleColumnLayoutSemanticHelper, JSONModel, Busy) {
         "use strict";
@@ -34,6 +34,9 @@ sap.ui.define([
                 // Setting Global Model - for setting View properties
                 this.setModel(models.createGlobalModel(), "GlobalModel");
 
+                //Fetch User Details
+                this.getUserDetails();
+
                 // enable routing
                 this.getRouter().initialize();
 
@@ -52,7 +55,28 @@ sap.ui.define([
                     };
 
                 return FlexibleColumnLayoutSemanticHelper.getInstanceFor(oFCL, oSettings);
+            },
+
+            getUserDetails: function () {
+                var UserDetails = new JSONModel({
+                    Uname: "Bhushan Ghule",
+                    Buyer: true,
+                    PuMgr: false,
+                    PuLogLeader: false,
+                    LogisticsMgr: false,
+                    LogisticsAnalyst: false,
+                    SME: false
+                });
+                this.setModel(UserDetails, "UserDetailsModel");
+                //Set My Inbox Model 	
+                var oMyInboxModel = new JSONModel({
+                    "MyInboxRequests": 0,
+                    items: []
+                });
+                oMyInboxModel.setSizeLimit(10000);
+                this.setModel(oMyInboxModel, "MyInboxRequestModel");
             }
+
         });
     }
 );
