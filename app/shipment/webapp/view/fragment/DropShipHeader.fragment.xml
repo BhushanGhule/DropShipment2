@@ -28,7 +28,7 @@
 				<m:ComboBox id="iShipToCodeComboBox" showSecondaryValues="true" filterSecondaryValues="true" items="{/ShippingSet}"
 					editable="{defaultValueModel>/DisplaySettings/editable}" valueState="{defaultValueModel>/ValueStateHeader/ShipToCode}"
 					change="onShipToCodeChange" class="sapUiTinyMarginEnd" width="300px" selectedKey="{defaultValueModel>/DetailHeader/ShipToCode}">
-					<core:ListItem key="{Title}" text="{Title}"/>
+					<core:ListItem key="{TITLE}" text="{TITLE}"/>
 					<m:layoutData>
 						<l:GridData span="XL3 L3 M3 S12"/>
 					</m:layoutData>
@@ -110,7 +110,7 @@
 					editable="{defaultValueModel>/DisplaySettings/editable}" change="onOriginDestinationPoint" class="sapUiTinyMarginEnd" width="300px"
 					placeholder="{i18n>OriginDestinationPointNote}" valueState="{defaultValueModel>/ValueStateHeader/OriginDestinationPoint}"
 					selectedKey="{defaultValueModel>/DetailHeader/OriginDestinationPoint}">
-					<core:ListItem key="{Title}" text="{Title}"/>
+					<core:ListItem key="{TITLE}" text="{TITLE}"/>
 					<m:layoutData>
 						<l:GridData span="XL3 L3 M3 S12"/>
 					</m:layoutData>

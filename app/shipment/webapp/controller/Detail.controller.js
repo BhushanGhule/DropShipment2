@@ -38,7 +38,7 @@ sap.ui.define([
 			}
 
 			if ((this.getOwnerComponent().getModel("ComponentModel").getData().layout === "TwoColumnsBeginExpanded" ||
-					this.getOwnerComponent().getModel("ComponentModel").getData().layout === "TwoColumnsMidExpanded") && sRequestNumber === "0") {
+				this.getOwnerComponent().getModel("ComponentModel").getData().layout === "TwoColumnsMidExpanded") && sRequestNumber === "0") {
 				if (sRequestFromPath !== "0") {
 					return;
 				}
@@ -79,8 +79,8 @@ sap.ui.define([
 		setRequestData: function (sRequestNumber) {
 			Busy.show();
 			var sPath = this.oModel.createKey("/ZPU_C_DS_REQ_HEAD", {
-					"i_reqnum": sRequestNumber
-				}),
+				"i_reqnum": sRequestNumber
+			}),
 				oRequestModel = this.getView().getModel("RequestModel"),
 				oDetailViewModel = this.getOwnerComponent().getModel("DetailViewModel");
 			this.readAttachments(sRequestNumber);
@@ -286,13 +286,13 @@ sap.ui.define([
 			if (oEvent.getParameters("").value !== "") {
 				var selectedItem = oEvent.getSource().getSelectedItem().getBindingContext().getModel().getProperty(oEvent.getSource().getSelectedItem()
 					.getBindingContext().getPath());
-				this.oDefaultModel.DetailHeader.ShipToAddress = selectedItem.ShipToAddress;
-				this.oDefaultModel.DetailHeader.SoldToAddress = selectedItem.SoldToAddress;
+				this.oDefaultModel.DetailHeader.ShipToAddress = selectedItem.SHIP_TO_ADDRESS;
+				this.oDefaultModel.DetailHeader.SoldToAddress = selectedItem.SOLD_TO_ADDRESS;
 				this.oDefaultModel.DetailHeader.Plant = oEvent.getParameters("").value.substring(0, 4);
-				this.oDefaultModel.AdditionalFields.ShipToCodeIncoterm = selectedItem.IncotermValue;
+				this.oDefaultModel.AdditionalFields.ShipToCodeIncoterm = selectedItem.INCOTERM_VALUE;
 			} else {
-				this.oDefaultModel.DetailHeader.ShipToAddress = "";
-				this.oDefaultModel.DetailHeader.SoldToAddress = "";
+				this.oDefaultModel.DetailHeader.SHIP_TO_ADDRESS = "";
+				this.oDefaultModel.DetailHeader.SOLD_TO_ADDRESS = "";
 				this.oDefaultModel.DetailHeader.Plant = "";
 				this.oDefaultModel.AdditionalFields.ShipToCodeIncoterm = "";
 			}
@@ -326,9 +326,9 @@ sap.ui.define([
 			}
 			// ********************Begin of Get Incoterm ******************************************************			
 			this.oDefaultModel.Incoterm = this.oDefaultModel.CarrierAll.filter(function (value) {
-				return value.Title === FreightPayableBy;
+				return value.TITLE === FreightPayableBy;
 			}).map(function (value) {
-				return value.Incoterm;
+				return value.INCOTERM;
 			});
 			this.oDefaultModel.Incoterm = [...new Set(this.oDefaultModel.Incoterm.map((item) => item))];
 			if (this.oDefaultModel.Incoterm.length === 1) {
@@ -340,15 +340,15 @@ sap.ui.define([
 			if (FreightPayableBy === "SITE") {
 				var Plant = this.oDefaultModel.DetailHeader.ShipToCode.slice(0, 4);
 				this.oDefaultModel.CarrierAccountNumber = this.oDefaultModel.CarrierAll.filter(function (value) {
-					return value.Title === FreightPayableBy, value.Site === Plant;
+					return value.TITLE === FreightPayableBy, value.SITE === Plant;
 				}).map(function (value) {
-					return value.Carrier;
+					return value.CARRIER;
 				});
 			} else {
 				this.oDefaultModel.CarrierAccountNumber = this.oDefaultModel.CarrierAll.filter(function (value) {
-					return value.Title === FreightPayableBy;
+					return value.TITLE === FreightPayableBy;
 				}).map(function (value) {
-					return value.Carrier;
+					return value.CARRIER;
 				});
 			}
 			this.oDefaultModel.CarrierAccountNumber = [...new Set(this.oDefaultModel.CarrierAccountNumber.map((item) => item))];
@@ -407,6 +407,13 @@ sap.ui.define([
 				success: function (oData) {
 					this.oDefaultModel.CarrierAll = oData.results;
 					this.oDefaultModel.Carrier = [...new Set(this.oDefaultModel.CarrierAll.map(item => item.TITLE))];
+				    // var Carrier = [];
+					// this.oDefaultModel.Carrier.forEach(function (Item) {
+					// 	Carrier.push({
+					// 		"TITLE": Item,
+					// 	});
+					// });
+                    // this.oDefaultModel.Carrier = Carrier;
 					this._refreshModel();
 					Busy.hide();
 				}.bind(this),
@@ -1332,10 +1339,10 @@ sap.ui.define([
 						} else {
 							MessageToast.show(this.i18n.getText("NOChangesSaved"));
 						}
-						if( this.oDefaultModel.DetailHeader.ChangesSaved === "X"){
-						this.oDefaultModel.DetailItems.forEach(function (Item) {
-							Item.OldNew = "OLD";
-						});
+						if (this.oDefaultModel.DetailHeader.ChangesSaved === "X") {
+							this.oDefaultModel.DetailItems.forEach(function (Item) {
+								Item.OldNew = "OLD";
+							});
 						}
 						this._refreshModel();
 						this._readLog(this.oDefaultModel.DetailHeader.RequestNumber);
@@ -1344,10 +1351,10 @@ sap.ui.define([
 						this.oDefaultModel.DetailHeader.Action === "DN" ||
 						this.oDefaultModel.DetailHeader.Action === "643"
 					) {
-						if( this.oDefaultModel.DetailHeader.ChangesSaved === "X"){
-						this.oDefaultModel.DetailItems.forEach(function (Item) {
-							Item.OldNew = "OLD";
-						});
+						if (this.oDefaultModel.DetailHeader.ChangesSaved === "X") {
+							this.oDefaultModel.DetailItems.forEach(function (Item) {
+								Item.OldNew = "OLD";
+							});
 						}
 						this._refreshModel();
 						this._readLog(this.oDefaultModel.DetailHeader.RequestNumber);
@@ -1583,8 +1590,8 @@ sap.ui.define([
 										DetailItems = Response.data;
 
 									}.bind(this));
-									if( this.oDefaultModel.DetailHeader.ChangesSaved === "X"){
-									DetailItems.OldNew = "OLD";
+									if (this.oDefaultModel.DetailHeader.ChangesSaved === "X") {
+										DetailItems.OldNew = "OLD";
 									}
 									this.oDefaultModel.DetailItems[DetailItems.ItemIndex] = DetailItems;
 									this._refreshModel();
@@ -1662,7 +1669,7 @@ sap.ui.define([
 		_formatDecimalNumber: function (value) {
 			if (value !== undefined) {
 				value = value.replace(/\,/g, '');
-			}			
+			}
 			value = (Math.round(Number(value) * 1000) / 1000).toFixed(3);
 			var oFormat = sap.ui.core.format.NumberFormat.getIntegerInstance({
 				decimals: 3,
@@ -1751,7 +1758,7 @@ sap.ui.define([
 			}
 			if (that.errorAttachment === 0 && that.successAttachment === 0) {
 				MessageBox.success(msgText + this.oDefaultModel.DetailHeader.RequestNumber, {
-					actions: [MessageBox.Action.OK, ],
+					actions: [MessageBox.Action.OK,],
 					emphasizedAction: MessageBox.Action.OK,
 					onClose: function (sAction) {
 						Busy.show();
@@ -1761,14 +1768,14 @@ sap.ui.define([
 			} else {
 				MessageBox.success(msgText + this.oDefaultModel.DetailHeader.RequestNumber +
 					"\n Successful attachments = " + that.successAttachment + "\n Failed attachments = " + that.errorAttachment, {
-						actions: [MessageBox.Action.OK, ],
-						emphasizedAction: MessageBox.Action.OK,
-						onClose: function (sAction) {
-							Busy.show();
-							that.handleClose();
-							this.oDefaultModel
-						}
-					});
+					actions: [MessageBox.Action.OK,],
+					emphasizedAction: MessageBox.Action.OK,
+					onClose: function (sAction) {
+						Busy.show();
+						that.handleClose();
+						this.oDefaultModel
+					}
+				});
 			}
 			Busy.hide();
 		},
@@ -1900,13 +1907,13 @@ sap.ui.define([
 					MessageBox.success(sDisplayMsg + this.oDefaultModel.DetailHeader.RequestNumber +
 						"\n Successful attachments = " + this.oDefaultModel.Attachment.SuccessAttachments + "\n Failed attachments = " +
 						this.oDefaultModel.Attachment.ErrorAttachments, {
-							actions: [MessageBox.Action.OK],
-							emphasizedAction: MessageBox.Action.OK,
-							onClose: function (sAction) {
-								Busy.hide();
-								this.handleClose();
-							}.bind(this)
-						});
+						actions: [MessageBox.Action.OK],
+						emphasizedAction: MessageBox.Action.OK,
+						onClose: function (sAction) {
+							Busy.hide();
+							this.handleClose();
+						}.bind(this)
+					});
 				}
 			}.bind(this), function () {
 				this.byId("AttachmentUploadCollection").clear();
@@ -1919,9 +1926,9 @@ sap.ui.define([
 			return new Promise(function (resolve, reject) {
 				// return new Promise(function (resolve) {
 				var oCustomerHeaderTokenfetch = new sap.m.UploadCollectionParameter({
-						name: "x-csrf-token",
-						value: this.oModel.getSecurityToken()
-					}),
+					name: "x-csrf-token",
+					value: this.oModel.getSecurityToken()
+				}),
 					sFileNameWithType = oAttachment.FileName,
 					sFileType = sFileNameWithType.substr(sFileNameWithType.lastIndexOf(".") + 1),
 					sFileName = sFileNameWithType.substr(0, sFileNameWithType.lastIndexOf(".")),
@@ -2163,18 +2170,18 @@ sap.ui.define([
 			// that._oComponent.getModel("defaultValueModel").getData().WorkItemId = WorkItemId;
 			var decisionKey;
 			switch (this.oDefaultModel.DetailHeader.Action) {
-			case 'Approve':
-				decisionKey = '0001';
-				break;
-			case 'Reject':
-				decisionKey = '0002';
-				break;
-			case 'WithdrawLA':
-				decisionKey = '0004';
-				break;
-			case 'Close':
-				decisionKey = '0005';
-				break;
+				case 'Approve':
+					decisionKey = '0001';
+					break;
+				case 'Reject':
+					decisionKey = '0002';
+					break;
+				case 'WithdrawLA':
+					decisionKey = '0004';
+					break;
+				case 'Close':
+					decisionKey = '0005';
+					break;
 			}
 
 			this.getOwnerComponent().getModel('WorkflowSrv').callFunction("/ApplyDecision", {
