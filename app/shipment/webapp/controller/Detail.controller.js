@@ -14,7 +14,7 @@ sap.ui.define([
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
 		 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
-		 * @memberOf DropShipment.Z_PU_IMACIPO_DS.view.Detail
+		 * @memberOf shipment.view.Detail
 		 */
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
@@ -271,7 +271,7 @@ sap.ui.define([
 			if (!this.byId("UploadTextAreaDialog")) {
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "DropShipment.Z_PU_IMACIPO_DS.view.fragment.UploadText",
+					name: "shipment.view.fragment.UploadText",
 					controller: this
 				}).then(function (oDialog) {
 					this.getView().addDependent(oDialog);
@@ -306,7 +306,7 @@ sap.ui.define([
 			if (oEvent.getParameters("").value !== "") {
 				var selectedItem = oEvent.getSource().getSelectedItem().getBindingContext("VendorListModel").getModel().getProperty(oEvent.getSource().getSelectedItem()
 					.getBindingContext("VendorListModel").getPath());
-				this.oDefaultModel.DetailHeader.VendorName = selectedItem.Name;
+				this.oDefaultModel.DetailHeader.VendorName = selectedItem.VendorName;
 			} else {
 				this.oDefaultModel.DetailHeader.VendorName = "";
 			}
@@ -426,7 +426,7 @@ sap.ui.define([
 			if (!this.byId("UploadTextAreaDialog")) {
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "DropShipment.Z_PU_IMACIPO_DS.view.fragment.UploadText",
+					name: "shipment.view.fragment.UploadText",
 					controller: this
 				}).then(function (oDialog) {
 					this.getView().addDependent(oDialog);
@@ -1163,7 +1163,7 @@ sap.ui.define([
 			this.oDefaultModel.DetailHeader.Remarks = "";
 			this._refreshModel();
 			if (!this._remarkDialog) {
-				this._remarkDialog = sap.ui.xmlfragment("DropShipment.Z_PU_IMACIPO_DS.view.fragment.Remark", this);
+				this._remarkDialog = sap.ui.xmlfragment("shipment.view.fragment.Remark", this);
 				this.getView().addDependent(this._remarkDialog);
 			}
 			this._remarkDialog.open();
@@ -1719,7 +1719,7 @@ sap.ui.define([
 			if (!this.byId("MessagePopOverItems")) {
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "DropShipment.Z_PU_IMACIPO_DS.view.fragment.MessagePopOver",
+					name: "shipment.view.fragment.MessagePopOver",
 					controller: this
 				}).then(function (oDialog) {
 					this.getView().addDependent(oDialog);

@@ -36,7 +36,7 @@ sap.ui.define([
 
                 //Fetch User Details
                 this.getUserDetails();
-
+                this.readVendorList(this);
                 // enable routing
                 this.getRouter().initialize();
 
@@ -75,7 +75,27 @@ sap.ui.define([
                 });
                 oMyInboxModel.setSizeLimit(10000);
                 this.setModel(oMyInboxModel, "MyInboxRequestModel");
-            }
+            },
+            readVendorList: function (that) {
+                that.getModel().read("/VendorSet", {
+                    success: function (oData, oResponse) {
+                        var oVendorListModel = new JSONModel({});
+                        oVendorListModel.setSizeLimit(10000);
+                        that.setModel(oVendorListModel, "VendorListModel");
+                        oData.results.sort(function (a, b) {
+                            return a.VendorCode - b.VendorCode;
+                        });
+                        that.getModel("VendorListModel").setProperty("/VendorList", oData.results);
+                        Busy.hide();
+                    }.bind(that),
+                    error: function (oError) {
+                        if (oError.responseText) {
+                            var sErrorText = JSON.parse(oError.responseText).error.message.value;
+                            sap.m.MessageBox.error(sErrorText);
+                        }
+                    }.bind(that)
+                });
+            }	
 
         });
     }

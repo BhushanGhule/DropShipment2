@@ -32,4 +32,10 @@ context master {
         SITE       : String(4)  @title: '{i18n>SITE}';
     }
 
+    entity Vendor {
+      key  VendorCode : String(10) @title: '{i18n>VENDOR_CODE}';
+        VendorName : String(50) @title: '{i18n>VENDOR_NAME}';
+
+    }
+
 }

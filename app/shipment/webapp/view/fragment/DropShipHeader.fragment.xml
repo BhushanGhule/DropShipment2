@@ -52,7 +52,7 @@
 				<m:ComboBox id="iVendorCode" showSecondaryValues="true" filterSecondaryValues="true" items="{VendorListModel>/VendorList}"
 					editable="{defaultValueModel>/DisplaySettings/editable}" valueState="{defaultValueModel>/ValueStateHeader/VendorCode}"
 					change="onVendorCodeChange" class="sapUiTinyMarginEnd" selectedKey="{defaultValueModel>/DetailHeader/VendorCode}" width="300px">
-					<core:ListItem key="{VendorListModel>Lifnr}" text="{VendorListModel>Lifnr}" additionalText="{VendorListModel>Name}"/>
+					<core:ListItem key="{VendorListModel>VendorCode}" text="{VendorListModel>VendorCode}" additionalText="{VendorListModel>VendorName}"/>
 					<m:layoutData>
 						<l:GridData span="XL3 L3 M3 S12"/>
 					</m:layoutData>
