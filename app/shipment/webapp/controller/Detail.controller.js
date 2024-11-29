@@ -1213,7 +1213,7 @@ sap.ui.define([
 		_handleBatchProcess: function (that) {
 			Busy.show();
 			var batchUrls = [];
-			var url = "/sap/opu/odata/sap/ZOD_PU_IMACIPO_DS_SRV/";
+			var url = "/odata/v2/CatalogService/";
 			var oModel = new sap.ui.model.odata.ODataModel(url, true);
 			var header = {};
 			header = Object.assign({}, this.oDefaultModel.DetailHeader);

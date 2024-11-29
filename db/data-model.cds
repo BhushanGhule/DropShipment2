@@ -38,8 +38,9 @@ context master {
 
     }
 
+    @sequence.name: 'DS_REQUEST_NUMBER'
     entity DSHeader {
-        key RequestNumber           : String(10)     @title: '{i18n>REQUESTNUMBER}}';
+        key RequestNumber           : String(10)     @generated.by.db.sequence  @title: '{i18n>REQUESTNUMBER}}';
             VendorCode              : String(10)     @title: '{i18n>VENDOR_CODE}}}';
             Plant                   : String(4)      @title: '{i18n>PLANT}}';
             VendorName              : String(35)     @title: '{i18n>VENDOR_NAME}';
@@ -68,33 +69,33 @@ context master {
             Status                  : String(3)      @title: '{i18n>STATUS}';
             UserName                : String(80)     @title: '{i18n>USERNAME}';
             Author                  : String(80)     @title: '{i18n>AUTHOR}';
-            CreatedOn               : DateTime       @title: '{i18n>CREATEDON}';
+            CreatedOn               : Timestamp       @title: '{i18n>CREATEDON}';
             LastChangedBy           : String(80)     @title: '{i18n>LASTCHANGEDBY}';
-            LastChangedOn           : DateTime       @title: '{i18n>LASTCHANGEDON}';
+            LastChangedOn           : Timestamp       @title: '{i18n>LASTCHANGEDON}';
             Remarks                 : String(250)    @title: '{i18n>REMARKS}';
     }
 
     entity DSItem {
-        RequestNumber  : String(10)     @title: '{i18n>REQUESTNUMBER}}';
-        SequenceNumber : Int16          @title: '{i18n>SequenceNumber}';
-        POLineItem     : String(10)     @title: '{i18n>POLineItem}';
-        SitePO         : String(10)     @title: '{i18n>SitePO}';
-        ImacPO         : String(10)     @title: '{i18n>ImacPO}';
-        PackingList    : String(30)     @title: '{i18n>PackingList}';
-        Material       : String(40)     @title: '{i18n>Material}';
-        Description    : String(40)     @title: '{i18n>Description}';
-        Quantity       : Decimal(10, 0) @title: '{i18n>Quantity}';
-        UOM            : String(2)      @title: '{i18n>UOM}';
-        HS             : String(10)     @title: '{i18n>HS}';
-        ECN            : String(5)      @title: '{i18n>ECN}';
-        COO            : String(10)     @title: '{i18n>COO}';
-        UnitPrice      : Decimal(10, 5) @title: '{i18n>UnitPrice}';
-        NetWeight      : Decimal(7, 3)  @title: '{i18n>NetWeight}';
-        ExtendedPrice  : Decimal(10, 2) @title: '{i18n>ExtendedPrice}';
-        Z03            : String(10)     @title: '{i18n>Z03}';
-        Z411k          : String(10)     @title: '{i18n>Z411k}';
-        Dn             : String(10)     @title: '{i18n>Dn}';
-        Z643           : String(10)     @title: '{i18n>Z643}';
+        key RequestNumber  : String(10)     @title: '{i18n>REQUESTNUMBER}}';
+        key SequenceNumber : Int16          @title: '{i18n>SequenceNumber}';
+            POLineItem     : String(10)     @title: '{i18n>POLineItem}';
+            SitePO         : String(10)     @title: '{i18n>SitePO}';
+            ImacPO         : String(10)     @title: '{i18n>ImacPO}';
+            PackingList    : String(30)     @title: '{i18n>PackingList}';
+            Material       : String(40)     @title: '{i18n>Material}';
+            Description    : String(40)     @title: '{i18n>Description}';
+            Quantity       : Decimal(10, 0) @title: '{i18n>Quantity}';
+            UOM            : String(2)      @title: '{i18n>UOM}';
+            HS             : String(10)     @title: '{i18n>HS}';
+            ECN            : String(5)      @title: '{i18n>ECN}';
+            COO            : String(10)     @title: '{i18n>COO}';
+            UnitPrice      : Decimal(10, 5) @title: '{i18n>UnitPrice}';
+            NetWeight      : Decimal(7, 3)  @title: '{i18n>NetWeight}';
+            ExtendedPrice  : Decimal(10, 2) @title: '{i18n>ExtendedPrice}';
+            Z03            : String(10)     @title: '{i18n>Z03}';
+            Z411k          : String(10)     @title: '{i18n>Z411k}';
+            Dn             : String(10)     @title: '{i18n>Dn}';
+            Z643           : String(10)     @title: '{i18n>Z643}';
 
     }
 
