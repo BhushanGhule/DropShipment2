@@ -1,0 +1,35 @@
+
+
+ //GET http://localhost:4004/rest/root/MyFunction(category=42)
+
+# POST http://localhost:4004/odata/v4/CatalogService/MyAction
+# Content-Type: application/json
+
+# {
+#     "input1":{
+#         "field1":123,
+#         "field2":"Value"
+#     },
+#         "input2":[ {
+#         "field1":1,
+#         "field2":"Value"
+#     },{
+#         "field1":2,
+#         "field2":"Value"
+#     },{
+#         "field1":3,
+#         "field2":"Value"
+#     }]
+# }
+
+POST http://localhost:4004/odata/v4/CatalogService/CreateDestination
+Content-Type: application/json
+
+{ "Destination":[ {
+        "TITLE":"Value"
+    },{
+        "TITLE":"Value"
+    },{
+        "TITLE":"Value"
+    }]
+}

@@ -69,10 +69,12 @@ context master {
             Status                  : String(3)      @title: '{i18n>STATUS}';
             UserName                : String(80)     @title: '{i18n>USERNAME}';
             Author                  : String(80)     @title: '{i18n>AUTHOR}';
-            CreatedOn               : Timestamp       @title: '{i18n>CREATEDON}';
+            CreatedOn               : Timestamp      @title: '{i18n>CREATEDON}';
             LastChangedBy           : String(80)     @title: '{i18n>LASTCHANGEDBY}';
-            LastChangedOn           : Timestamp       @title: '{i18n>LASTCHANGEDON}';
+            LastChangedOn           : Timestamp      @title: '{i18n>LASTCHANGEDON}';
             Remarks                 : String(250)    @title: '{i18n>REMARKS}';
+            DSItems                 : Composition of many DSItem
+                                          on DSItems.RequestNumber = RequestNumber
     }
 
     entity DSItem {

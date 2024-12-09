@@ -32,7 +32,7 @@
                         icon="sap-icon://BusinessSuiteInAppSymbols/icon-set-as-default"
                         enabled="true"
                         press="onUpdateTables"
-                        visible="{= (${UserDetailsModel>/SME} === true) || (${UserDetailsModel>/LogisticsAnalyst} === true) }"
+                        visible="true"
                     />
                     <Button
                         id="MassProcessing"

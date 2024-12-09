@@ -407,13 +407,13 @@ sap.ui.define([
 				success: function (oData) {
 					this.oDefaultModel.CarrierAll = oData.results;
 					this.oDefaultModel.Carrier = [...new Set(this.oDefaultModel.CarrierAll.map(item => item.TITLE))];
-				    // var Carrier = [];
+					// var Carrier = [];
 					// this.oDefaultModel.Carrier.forEach(function (Item) {
 					// 	Carrier.push({
 					// 		"TITLE": Item,
 					// 	});
 					// });
-                    // this.oDefaultModel.Carrier = Carrier;
+					// this.oDefaultModel.Carrier = Carrier;
 					this._refreshModel();
 					Busy.hide();
 				}.bind(this),
@@ -937,14 +937,61 @@ sap.ui.define([
 				}
 			}
 		},
+		// onValidate: function (oEvent) {
+		// 	var error;
+		// 	this.oDefaultModel.DetailHeader.Action = "Validate";
+		// 	error = this._validate();
+		// 	if (error !== "X") {
+		// 		this._handleBatchProcess(this);
+		// 	}
+		// },
+
 		onValidate: function (oEvent) {
-			var error;
-			this.oDefaultModel.DetailHeader.Action = "Validate";
-			error = this._validate();
-			if (error !== "X") {
-				this._handleBatchProcess(this);
-			}
+			// var url = "/odata/v4/CatalogService/";
+			// var oModel = new sap.ui.model.odata.ODataModel(url, true);
+
+			// const oPayload = {
+			// 	input: {
+			// 		"field1": 123,
+			// 		"field2": "Value"
+			// 	}
+			// };
+			// oModel.create("/MyAction", oPayload, {
+			// 	success: function (oData) {
+			// 		MessageToast.show("MyAction executed successfully!");
+			// 	},
+			// 	error: function (oError) {
+			// 		MessageToast.show("Failed to execute MyAction!");
+			// 	}
+			// });
+			var oModel = this.getView().getModel();
+
+			// Define the input payload for the action
+			var oPayload = {
+				input: {
+					name: "John Doe" // Example input object
+				}
+			};
+
+			// Trigger the action
+			oModel.callFunction("/MyAction", {
+				method: "POST", // or "GET" if your action supports it
+				urlParameters: oPayload,
+				success: function (oData, response) {
+					// Handle success response
+					MessageToast.show("Action triggered successfully: " + oData.message);
+					console.log("Success:", oData);
+				},
+				error: function (oError) {
+					// Handle error response
+					MessageToast.show("Failed to trigger action");
+					console.error("Error:", oError);
+				}
+			});
+
+
 		},
+
 		_validate: function () {
 			var error = "",
 				errorHeader = "",
@@ -1191,7 +1238,7 @@ sap.ui.define([
 			} else if (this.oDefaultModel.DetailHeader.Action === "Create" || this.oDefaultModel.DetailHeader.Action === "Draft" || this.oDefaultModel
 				.DetailHeader.Action === "Submit") {
 				this._remarkDialog.close();
-				this._handleBatchProcess(this);
+				this._CreateDSRequest(this);
 			} else if (this.oDefaultModel.DetailHeader.Action === "Approve" || this.oDefaultModel.DetailHeader.Action === "Reject" ||
 				this.oDefaultModel.DetailHeader.Action === "WithdrawLA" || this.oDefaultModel.DetailHeader.Action === "Close") {
 				this._handleWorkflowService(this);
@@ -1366,6 +1413,90 @@ sap.ui.define([
 			});
 
 		},
+
+		_CreateDSRequest: function (that, oRowData) {
+			Busy.show();
+			var oModel = this.getView().getModel();
+			var header = Object.assign({}, this.oDefaultModel.DetailHeader);
+			delete header.Action;
+			delete header.Message;
+			delete header.GUID;
+			header.CreatedOn = new Date().toISOString();
+			header.LastChangedOn = new Date().toISOString();
+			var items = this.oDefaultModel.DetailItems;
+			items.forEach(async function (Item) {
+				delete Item.GUID;
+				delete Item.OldNew;
+				delete Item.ValidationState;
+				delete Item.ValueState;
+
+			});
+			var oPayload = {
+				DSHeader: header,
+				DSItem: items
+			};
+			oModel.create("/CreateDSRequest", oPayload, {
+				success: function (oData) {
+					// Handle success response
+					MessageToast.show("Drop Shipment created successfully: " + oData.CreateCarrier.message);
+					console.log("Response Data:", oData);
+					Busy.hide();
+				},
+				error: function (oError) {
+					// Handle error response
+					MessageToast.show("Failed to create Drop Shipment.");
+					console.error("Error:", oError);
+					Busy.hide();
+				}
+			});
+
+		},
+
+
+		_handleBatchProcessCAP: function (that, oRowData) {
+			// var url = "/odata/v4/CatalogService/";
+			// var oModel = new sap.ui.model.odata.ODataModel(url, true);
+
+			// Prepare the header data
+			var header = Object.assign({}, this.oDefaultModel.DetailHeader);
+			delete header.Action;
+			delete header.Message;
+			header.CreatedOn = new Date().toISOString();
+			header.LastChangedOn = new Date().toISOString();
+
+			// Prepare the parameters (header and items) to be passed as request body
+			// var input = {
+			// 	DSHeader: header,
+			// 	DSItem: this.oDefaultModel.DetailItems
+			// };
+
+			var oModel = this.getView().getModel();
+
+			// Define the input payload for the action
+			var oPayload = {
+				DSHeader: header,
+				DSItem: this.oDefaultModel.DetailItems
+			};
+
+
+			oModel.callFunction("/CreateDSRequest", {
+				method: "POST", // or "GET" if your action supports it
+				urlParameters: oPayload,
+				success: function (oData, response) {
+					// Handle success response
+					MessageToast.show("Action triggered successfully: " + oData.message);
+					console.log("Success:", oData);
+				},
+				error: function (oError) {
+					// Handle error response
+					MessageToast.show("Failed to trigger action");
+					console.error("Error:", oError);
+				}
+			});
+
+		},
+
+
 		_handleDeepEntityOneByOne: async function (that, Action, Item, Index) {
 			this.getView().setBusy(true);
 			return new Promise(async function (resolve, reject) {
