@@ -22,14 +22,95 @@
 #     }]
 # }
 
-POST http://localhost:4004/odata/v4/CatalogService/CreateDestination
+# POST http://localhost:4004/odata/v4/CatalogService/CreateDestination
+# Content-Type: application/json
+
+# { "Destination":[ {
+#         "TITLE":"Value"
+#     },{
+#         "TITLE":"Value"
+#     },{
+#         "TITLE":"Value"
+#     }]
+# }
+
+POST http://localhost:4004/odata/v4/CatalogService/CreateDSRequest
 Content-Type: application/json
 
-{ "Destination":[ {
-        "TITLE":"Value"
-    },{
-        "TITLE":"Value"
-    },{
-        "TITLE":"Value"
-    }]
+{
+    "DSHeader": {
+        "VendorCode": "VEND001",
+        "Plant": "PL01",
+        "VendorName": "Vendor ABC",
+        "ShipperName": "Shipper XYZ",
+        "ShipperAddress": "123 Shipping Lane",
+        "InvoiceType": "Standard",
+        "ShipToCode": "SHIP001",
+        "FreightPayableBy": "Buyer",
+        "PaidBy": "Customer",
+        "Incoterm": "FOB",
+        "FinalIncoterms": "FOB",
+        "CarrierAccountNumber": "ACC123456",
+        "OriginDestinationPoint": "Port A",
+        "MethodOfTransport": "Air",
+        "ServiceType": "Express",
+        "DateShipped": "2023-12-01",
+        "Currency": "USD",
+        "CINumber": "CI001234",
+        "ShipToAddress": "456 Receiving Road",
+        "SoldToAddress": "789 Billing Blvd",
+        "PalletCarton": "Yes",
+        "TotalShipmentCarton": "100",
+        "TotalGrossWeight": 500.123,
+        "TotalVolumeMetricWeight": 600.456,
+        "Measurement": "500x600x700",
+        "Status": "NEW",
+        "UserName": "admin",
+        "Author": "system",
+        "Remarks": "Test shipment"
+    },
+    "DSItem": [
+        {
+            "SequenceNumber": 1,
+            "POLineItem": "PO001",
+            "SitePO": "SITE001",
+            "ImacPO": "IMAC001",
+            "PackingList": "PKL123456",
+            "Material": "MAT001",
+            "Description": "Item 1 Description",
+            "Quantity": 10,
+            "UOM": "EA",
+            "HS": "HS1234",
+            "ECN": "EC001",
+            "COO": "USA",
+            "UnitPrice": 100.50,
+            "NetWeight": 5.123,
+            "ExtendedPrice": 1005.00,
+            "Z03": "Z03",
+            "Z411k": "Z411K",
+            "Dn": "DN001",
+            "Z643": "Z643"
+        },
+        {
+            "SequenceNumber": 2,
+            "POLineItem": "PO002",
+            "SitePO": "SITE002",
+            "ImacPO": "IMAC002",
+            "PackingList": "PKL123457",
+            "Material": "MAT002",
+            "Description": "Item 2 Description",
+            "Quantity": 20,
+            "UOM": "KG",
+            "HS": "HS5678",
+            "ECN": "EC002",
+            "COO": "GER",
+            "UnitPrice": 50.75,
+            "NetWeight": 10.123,
+            "ExtendedPrice": 1015.00,
+            "Z03": "Z03",
+            "Z411k": "Z411K",
+            "Dn": "DN002",
+            "Z643": "Z643"
+        }
+    ]
 }

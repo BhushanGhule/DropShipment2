@@ -1,0 +1,9 @@
+{
+  "increment_by": 1,
+  "start_with": 1,
+  "maxvalue": 99999,
+  "nomaxvalue": false,
+  "nominvalue": false,
+  "cycles": false,
+  "reset_by": null
+}

@@ -184,61 +184,106 @@ module.exports = cds.service.impl(async function () {
         }
     });
 
+
+    // this.on('CreateDSRequest', async (req) => {
+    //     const { DSHeader, DSItem } = req.data;
+
+    //     if (!DSHeader || typeof DSHeader !== 'object') {
+    //         req.error(400, 'DSHeader must be a valid object.');
+    //     }
+
+    //     if (!Array.isArray(DSItem) || DSItem.length === 0) {
+    //         req.error(400, 'DSItem must be a non-empty array.');
+    //     }
+
+    //     const tx = cds.transaction(req);
+
+    //     try {
+
+    //         DSHeaderSet.RequestNumber = "1";
+    //         const RequestNumber = DSHeaderSet.RequestNumber;
+
+    //         await tx.create(DSHeaderSet, DSHeader);
+
+    //         if (!DSHeader || !DSHeader.RequestNumber) {
+    //             throw new Error('Failed to generate RequestNumber for DSHeader.');
+    //         }
+
+
+    //         // Assign the generated RequestNumber to each DSItem
+    //         for (const item of DSItem) {
+    //             item.RequestNumber = RequestNumber;
+    //         }
+    //         const result = await tx.run(
+    //             INSERT.into(this.entities.DSItemSet).entries(DSItem)
+    //         );    
+
+    //         await tx.commit();
+
+    //         return {
+    //             message: 'DSRequest created successfully.',
+    //             RequestNumber: RequestNumber,
+    //         };
+    //     } catch (error) {
+    //         await tx.rollback();
+    //         req.error(500, `Error in CreateDSRequest action: ${error.message}`);
+    //     }
+    // });
+
     this.on('CreateDSRequest', async (req) => {
-        const { DSHeader, DSItems } = req.data;
-    
-        // Validate that DSHeader is provided and is an object
+        const { DSHeader, DSItem } = req.data;
+
+        // Validate input data
         if (!DSHeader || typeof DSHeader !== 'object') {
-            req.error(400, 'DSHeader must be a valid object.');
+            req.error(400, 'Invalid input: DSHeader must be a valid object.');
         }
-    
-        // Start a transaction
+
+        if (!Array.isArray(DSItem) || DSItem.length === 0) {
+            req.error(400, 'Invalid input: DSItem must be a non-empty array.');
+        }
+
         const tx = cds.transaction(req);
-    
+
         try {
-            // Insert the DSHeader record into DSHeaderSet using tx.create
-            const dsHeaderResult = await tx.create('DSHeaderSet', DSHeader);
-    
-            // Validate insertion of DSHeader
-            if (!dsHeaderResult) {
-                req.error(400, 'Failed to create DSHeader.');
+            // Generate the RequestNumber using raw SQL
+            const sequenceResult = await tx.run(
+                `SELECT DSREQUESTSEQ.NEXTVAL FROM DUMMY`
+            );
+
+            if (!sequenceResult || sequenceResult.length === 0) {
+                throw new Error('Failed to generate RequestNumber.');
             }
-    
-            // Check if DSItems are provided
-            if (Array.isArray(DSItems) && DSItems.length > 0) {
-                // Add RequestNumber from DSHeader to each DSItem
-                const dsItemsWithRequestNumber = DSItems.map((item, index) => ({
-                    ...item,
-                    RequestNumber: DSHeader.RequestNumber, // Use the RequestNumber from DSHeader
-                    SequenceNumber: index + 1 // Assign sequence number
-                }));
-    
-                // Insert DSItems into DSItemSet using tx.create
-                const dsItemsResults = await Promise.all(
-                    dsItemsWithRequestNumber.map(item => tx.create('DSItemSet', item))
-                );
-    
-                // Validate insertion of DSItems
-                if (dsItemsResults.length !== DSItems.length) {
-                    req.error(400, 'Failed to create one or more DSItems.');
-                }
+
+            var RequestNumber = sequenceResult[0]["DSREQUESTSEQ.NEXTVAL"];
+                RequestNumber = `DS${String(RequestNumber).padStart(8, '0')}`;
+            // Assign the generated RequestNumber to DSHeader and DSItem
+            DSHeader.RequestNumber = RequestNumber;
+
+            for (const item of DSItem) {
+                item.RequestNumber = RequestNumber;
             }
-    
+
+            // Insert DSHeader into the database
+            await tx.run(INSERT.into(this.entities.DSHeaderSet).entries(DSHeader));
+
+            // Insert DSItems into the database
+            await tx.run(INSERT.into(this.entities.DSItemSet).entries(DSItem));
+
             // Commit the transaction
             await tx.commit();
-    
-            // Return success message
+
+            // Return success response
             return {
-                message: 'Drop Shipment request created successfully.',
-                RequestNumber: DSHeader.RequestNumber
+                message: 'Drop Shipment request number ' + RequestNumber + ' created successfully.',
+                RequestNumber,
             };
         } catch (error) {
-            // Rollback transaction in case of failure
+            // Rollback the transaction on error
             await tx.rollback();
             req.error(500, `Error in CreateDSRequest action: ${error.message}`);
         }
     });
-    
+
 
     this.on('MyFunction', async (req) => {
         let result = {};

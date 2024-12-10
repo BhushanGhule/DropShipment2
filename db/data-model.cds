@@ -38,7 +38,6 @@ context master {
 
     }
 
-    @sequence.name: 'DS_REQUEST_NUMBER'
     entity DSHeader {
         key RequestNumber           : String(10)     @generated.by.db.sequence  @title: '{i18n>REQUESTNUMBER}}';
             VendorCode              : String(10)     @title: '{i18n>VENDOR_CODE}}}';
@@ -100,5 +99,6 @@ context master {
             Z643           : String(10)     @title: '{i18n>Z643}';
 
     }
+    
 
 }

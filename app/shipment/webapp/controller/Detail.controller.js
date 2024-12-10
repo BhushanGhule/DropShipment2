@@ -1438,16 +1438,24 @@ sap.ui.define([
 			oModel.create("/CreateDSRequest", oPayload, {
 				success: function (oData) {
 					// Handle success response
-					MessageToast.show("Drop Shipment created successfully: " + oData.CreateCarrier.message);
+					// MessageToast.show(oData.CreateDSRequest.message);
 					console.log("Response Data:", oData);
 					Busy.hide();
-				},
+					MessageBox.success(oData.CreateDSRequest.message, {
+						actions: [MessageBox.Action.OK],
+						emphasizedAction: MessageBox.Action.OK,
+						onClose: function (sAction) {
+							Busy.hide();
+							this.handleClose();
+						}.bind(this)
+					});
+				}.bind(this),
 				error: function (oError) {
 					// Handle error response
 					MessageToast.show("Failed to create Drop Shipment.");
 					console.error("Error:", oError);
 					Busy.hide();
-				}
+				}.bind(this)
 			});
 
 		},
